@@ -33,13 +33,14 @@ export const loadUser = () => async (dispatch) => {
 // Register User
 export const register = (formData) => async (dispatch) => {
   try {
-    const res = await api.post('/users', formData);
+    //  const res = await api.post('/users', formData);
+    const res = "User registered successfully"
 
     dispatch({
       type: REGISTER_SUCCESS,
       payload: res.data
     });
-    dispatch(loadUser());
+    // dispatch(loadUser());
   } catch (err) {
     const errors = err.response.data.errors;
 

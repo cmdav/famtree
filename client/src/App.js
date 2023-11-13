@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import Navbar from './components/layout/Navbar';
 import Landing from './components/layout/Landing';
+import Register from './components/registration/Register';
 
 import Alert from './components/layout/Alert';
 
@@ -27,6 +28,7 @@ const App = () => {
         <Routes>
           {/* Route for all roles */}
           <Route path='/' element={<Landing />} />
+          <Route path='/register' element={<Register setTitle={setTitle} />} />
 
         </Routes>
       </Router>
