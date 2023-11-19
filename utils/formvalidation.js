@@ -1,4 +1,9 @@
-export function validateProfileForm (formData, mode) {
+// profileFormValidator.js
+
+const logger = require('../utils/appLogger');
+
+module.exports.validateProfileForm = function (formData, mode) {
+    logger.info('validateProfileForm() called');
     const {
         firstName,
         lastName,
@@ -30,13 +35,13 @@ export function validateProfileForm (formData, mode) {
         validationErrors.otherName = 'Other Name is required';
     }
 
-    // Only validate password and confirm password when the mode is 'create'
-    if (mode && (mode === 'create' || mode === 'create')) {
+    // Only validate confirm password when the mode is 'create'
+    if (mode && mode === 'create') {
         if (password && password.trim() === '') {
             validationErrors.password = 'Password is required';
         } else if (!isValidPassword(password)) {
             validationErrors.password = 'Password must be at least 8 characters long and must contain at least one number and one special character';
-        }    
+        }
 
         if (confirmPassword && confirmPassword.trim() === '') {
             validationErrors.confirmPassword = 'Confirm Password is required';
@@ -92,41 +97,52 @@ export function validateProfileForm (formData, mode) {
     } else if (!isValidProfilePic(profilePic)) {
         validationErrors.profilePic = 'Invalid profile picture format. Only JPEG and PNG are allowed.';
     }
+    
+    if (Object.keys(validationErrors).length > 0) {
+        logger.error('Validation errors found in validateProfileForm()');
+    }
+
+    // Print the validation errors to the console
+    for (const key in validationErrors) {
+        if (validationErrors.hasOwnProperty(key)) {
+            logger.error(validationErrors[key]);
+        }
+    }
 
     return validationErrors;
 };
 
-const isValidEmail = (email) => {
+function isValidEmail(email) {
     // Basic email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
-};
+}
 
 // Password validation
-const isValidPassword = (password) => {
+function isValidPassword(password) {
     // Password must be at least 8 characters long and must contain at least one number and one special character
     const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
     return passwordRegex.test(password);
-};
+}
 
-const isValidPhone = (phone) => {
+function isValidPhone(phone) {
     // Basic phone number format validation
     const phoneRegex = /^\d{10}$/; // Assuming a 10-digit phone number
     return phoneRegex.test(phone);
-};
+}
 
-const isValidPostalCode = (postalCode) => {
+function isValidPostalCode(postalCode) {
     const postalCodeRegex = /^[A-Za-z]\d[A-Za-z]\s\d[A-Za-z]\d$/;
     return postalCodeRegex.test(postalCode);
-};
+}
 
-const isValidBirthdate = (birthdate) => {
+function isValidBirthdate(birthdate) {
     const inputDate = new Date(birthdate);
     const currentDate = new Date();
     return inputDate <= currentDate;
-};
+}
 
-const isValidProfilePic = (filename) => {
+function isValidProfilePic(filename) {
     const profilePicRegex = /\.(jpeg|jpg|png)$/i;
     return profilePicRegex.test(filename);
-};
+}

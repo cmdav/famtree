@@ -15,14 +15,8 @@ const PrivateRoute = ({
   if (!isAuthenticated) return <Navigate to="/login" />;
 
   // Check if the user's role is allowed to access the current page
-  if (user && allowedRoles.includes(user.role.toLowerCase())) {
-    // Check if the user's status is active
-    if (user.status && user.status.toLowerCase() === 'active') {
-      return <AuthenticatedPage setTitle={setTitle} />;
-    } else {
-      // dispatch(setAlert('Your account is disabled. Please contact your administrator.', 'danger'));
-      return <Navigate to="/login" />;
-    }
+  if (user) {
+    return <AuthenticatedPage setTitle={setTitle} />;
   } else {
     return <Navigate to="/unauthorized" />;
   }

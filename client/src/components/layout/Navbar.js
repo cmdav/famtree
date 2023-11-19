@@ -7,8 +7,9 @@ import PropTypes from 'prop-types';
 import { logout } from '../../actions/authAction';
 import { linksByRole } from "./LinksByRole";
 
-const Navbar = ({ auth: { isAuthenticated, user }, logout }) => {
-    const links = user ? linksByRole[user.role] : [];
+const Navbar = ({ auth: { isAuthenticated, user }, logout, profileId }) => {
+    // const links = user ? linksByRole[user.role] : []; // commenting the line as we only have one role
+    const links = linksByRole['User'];
 
     return (
         <nav className='navbar bg-dark'>
@@ -22,8 +23,9 @@ const Navbar = ({ auth: { isAuthenticated, user }, logout }) => {
                     {links.map(link => (
                         <li key={link.to}>
                             {
+                                // Check if the link.to has 'editprofile' in it then add the profileId to the link
                                 !link.onClick && (
-                                  <Link to={link.to}>
+                                  <Link to={link.text === 'Edit Profile' ? `${link.to}/${profileId}` : link.to}>
                                     {link.icon && <i className={link.icon} />}{' '}
                                     <span className='hide-sm'>{link.text}</span>
                                   </Link>
@@ -47,10 +49,12 @@ const Navbar = ({ auth: { isAuthenticated, user }, logout }) => {
 Navbar.propTypes = {
     logout: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
+    profileId: PropTypes.string
 };
 
 const mapStateToProps = (state) => ({
-    auth: state.authReducer
+    auth: state.authReducer,
+    profileId: state.profileReducer.userProfile ? state.profileReducer.userProfile._id : null,
 });
 
 export default connect(mapStateToProps, { logout })(Navbar);

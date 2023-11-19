@@ -4,7 +4,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { register } from '../../actions/authAction';
 import PropTypes from 'prop-types';
 import { validateProfileForm } from '../../utils/formvalidation';
@@ -40,7 +40,7 @@ const Register = ({ setTitle, register, isUserRegistered }) => {
         
         // Validate profile data using formvalidation.js
         // setErrors({});
-        const validationErrors = validateProfileForm(formData);
+        const validationErrors = validateProfileForm(formData, 'create');
 
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
@@ -51,7 +51,7 @@ const Register = ({ setTitle, register, isUserRegistered }) => {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        const validationErrors = validateProfileForm(formData);
+        const validationErrors = validateProfileForm(formData, 'create');
 
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
@@ -63,7 +63,7 @@ const Register = ({ setTitle, register, isUserRegistered }) => {
     };
 
     if (isUserRegistered) {
-        //   return <Navigate to="/usermanagement" />;
+          return <Navigate to="/dashboard" />;
     }
 
     return (

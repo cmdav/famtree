@@ -2,6 +2,7 @@
 
 import api from '../utils/api';
 import { setAlert } from './alertAction';
+import { loadProfile } from './profileAction';
 import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
@@ -33,14 +34,13 @@ export const loadUser = () => async (dispatch) => {
 // Register User
 export const register = (formData) => async (dispatch) => {
   try {
-    //  const res = await api.post('/users', formData);
-    const res = "User registered successfully"
-
+     const res = await api.post('/auth/register', formData);
+    
     dispatch({
       type: REGISTER_SUCCESS,
       payload: res.data
     });
-    // dispatch(loadUser());
+    dispatch(loadProfile());
   } catch (err) {
     const errors = err.response.data.errors;
 
