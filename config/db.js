@@ -4,6 +4,7 @@ const db = config.get('mongoURI');
 const logger = require('../utils/appLogger');
 
 const connectDB = async () => {
+  console.log(db)
   try{
     mongoose.set('strictQuery', false);
     await mongoose.connect(db);
