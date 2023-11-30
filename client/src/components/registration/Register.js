@@ -1,6 +1,6 @@
 // Register.js is a component that allows a user to register for an account
 // It is imported by App.js and is rendered by the Route path="/register" component={Register}
-// Component will have firstname, lastname, othername, email, phone, birthdate, street, city, state, postalCode, country, profilepic url.
+// Component will have firstname, lastname, middleName, email, phone, birthdate, street, city, state, postalCode, country, profilepic url.
 
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
@@ -17,7 +17,7 @@ const Register = ({ setTitle, register, isUserRegistered }) => {
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
-        otherName: '',
+        middleName: '',
         password: '',
         confirmPassword: '',
         email: '',
@@ -33,7 +33,7 @@ const Register = ({ setTitle, register, isUserRegistered }) => {
 
     const [errors, setErrors] = useState({});
 
-    const { firstName, lastName, otherName, password, confirmPassword, email, phone, street, city, state, postalCode, country, birthDate, profilePic } = formData;
+    const { firstName, lastName, middleName, password, confirmPassword, email, phone, street, city, state, postalCode, country, birthDate, profilePic } = formData;
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -101,14 +101,14 @@ const Register = ({ setTitle, register, isUserRegistered }) => {
                 <div className="form-group">
                     <input
                         type="text"
-                        placeholder="Other Name"
-                        name="otherName"
-                        value={otherName}
+                        placeholder="Middle Name"
+                        name="middleName"
+                        value={middleName}
                         title='Other Name'
                         onChange={onChange}
                         onKeyDown={onChange}
                     />
-                    {errors.otherName && <p className="text-danger">{errors.otherName}</p>}
+                    {errors.middleName && <p className="text-danger">{errors.middleName}</p>}
                 </div>
                 <div className="form-group">
                     <input

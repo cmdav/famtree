@@ -2,7 +2,7 @@ export function validateProfileForm (formData, mode) {
     const {
         firstName,
         lastName,
-        otherName,
+        middleName,
         password,
         confirmPassword,
         email,
@@ -26,8 +26,8 @@ export function validateProfileForm (formData, mode) {
         validationErrors.lastName = 'Last Name is required';
     }
 
-    if (otherName.trim() === '') {
-        validationErrors.otherName = 'Other Name is required';
+    if (middleName.trim() === '') {
+        validationErrors.middleName = 'Other Name is required';
     }
 
     // Only validate password and confirm password when the mode is 'create'

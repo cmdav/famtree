@@ -1,5 +1,5 @@
 // Create mongodb model for below attributes:
-// firstName, lastName, otherName, password, email, phone, street, city, state, postalCode, country, birthDate, profilePicPath
+// firstName, lastName, middleName, password, email, phone, street, city, state, postalCode, country, birthDate, profilePicPath
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
@@ -15,7 +15,7 @@ const ProfileSchema = new Schema({
         required: true,
         unique: false
     },
-    otherName: {
+    middleName: {
         type: String,
         required: true,
         unique: false

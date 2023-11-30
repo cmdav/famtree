@@ -47,7 +47,7 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ errors: Object.values(errors) });
     }
 
-    const { firstName, lastName, otherName, password, confirmPassword, email, phone, street, city, state, postalCode, country, birthDate, profilePic } = req.body;
+    const { firstName, lastName, middleName, password, confirmPassword, email, phone, street, city, state, postalCode, country, birthDate, profilePic } = req.body;
     const profile = await findProfileByEmail(email);
     if (profile) {
       return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
@@ -62,7 +62,7 @@ router.post('/register', async (req, res) => {
     const newProfile = new Profile({
       firstName,
       lastName,
-      otherName,
+      middleName,
       email,
       phone,
       street,

@@ -53,10 +53,10 @@ router.put('/:id', auth, async (req, res) => {
 
 
 
-        const { firstName, lastName, otherName, email, phone, street, city, state, postalCode, country, birthDate, profilePic } = req.body;
+        const { firstName, lastName, middleName, email, phone, street, city, state, postalCode, country, birthDate, profilePic } = req.body;
         profile.firstName = firstName;
         profile.lastName = lastName;
-        profile.otherName = otherName;
+        profile.middleName = middleName;
         profile.email = email;
         profile.phone = phone;
         profile.street = street;

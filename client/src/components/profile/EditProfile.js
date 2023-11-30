@@ -11,7 +11,7 @@ const EditProfile = ({ setTitle, getProfile, editProfile, userProfile, isProfile
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    otherName: '',
+    middleName: '',
     email: '',
     phone: '',
     street: '',
@@ -33,7 +33,7 @@ const EditProfile = ({ setTitle, getProfile, editProfile, userProfile, isProfile
       setFormData({
         firstName: userProfile.firstName,
         lastName: userProfile.lastName,
-        otherName: userProfile.otherName,
+        middleName: userProfile.middleName,
         email: userProfile.email,
         phone: userProfile.phone,
         street: userProfile.street,
@@ -52,7 +52,7 @@ const EditProfile = ({ setTitle, getProfile, editProfile, userProfile, isProfile
   const {
     firstName,
     lastName,
-    otherName,
+    middleName,
     email,
     phone,
     street,
@@ -127,14 +127,14 @@ const EditProfile = ({ setTitle, getProfile, editProfile, userProfile, isProfile
         <div className="form-group">
             <input
                 type="text"
-                placeholder="Other Name"
-                name="otherName"
-                value={otherName}
+                placeholder="Middle Name"
+                name="middleName"
+                value={middleName}
                 title="Other Name"
                 onChange={onChange}
                 onKeyDown={onChange}
             />
-            {errors.otherName && <p className="text-danger">{errors.otherName}</p>}
+            {errors.middleName && <p className="text-danger">{errors.middleName}</p>}
         </div>
         {/* Add form inputs for other fields */}
         <div className="form-group">
