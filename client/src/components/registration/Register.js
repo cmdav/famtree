@@ -85,18 +85,6 @@ const Register = ({ setTitle, register, isUserRegistered }) => {
                     />
                     {errors.firstName && <p className="text-danger">{errors.firstName}</p>}
                 </div>
-                <div className="form-group">
-                    <input
-                        type="text"
-                        placeholder="Last Name"
-                        name="lastName"
-                        value={lastName}
-                        title='Last Name'
-                        onChange={onChange}
-                        onKeyDown={onChange}
-                    />
-                    {errors.lastName && <p className="text-danger">{errors.lastName}</p>}
-                </div>
                 {/* Add error messages for other fields */}
                 <div className="form-group">
                     <input
@@ -109,6 +97,30 @@ const Register = ({ setTitle, register, isUserRegistered }) => {
                         onKeyDown={onChange}
                     />
                     {errors.middleName && <p className="text-danger">{errors.middleName}</p>}
+                </div>
+                <div className="form-group">
+                    <input
+                        type="text"
+                        placeholder="Last Name"
+                        name="lastName"
+                        value={lastName}
+                        title='Last Name'
+                        onChange={onChange}
+                        onKeyDown={onChange}
+                    />
+                    {errors.lastName && <p className="text-danger">{errors.lastName}</p>}
+                </div>
+                <div className="form-group">
+                    <input
+                        type="email"
+                        placeholder="Email Address"
+                        name="email"
+                        value={email}
+                        title='Email Address'
+                        onChange={onChange}
+                        onKeyDown={onChange}
+                    />
+                    {errors.email && <p className="text-danger">{errors.email}</p>}
                 </div>
                 <div className="form-group">
                     <input
@@ -133,18 +145,6 @@ const Register = ({ setTitle, register, isUserRegistered }) => {
                         onKeyDown={onChange}
                     />
                     {errors.confirmPassword && <p className="text-danger">{errors.confirmPassword}</p>}
-                </div>
-                <div className="form-group">
-                    <input
-                        type="email"
-                        placeholder="Email Address"
-                        name="email"
-                        value={email}
-                        title='Email Address'
-                        onChange={onChange}
-                        onKeyDown={onChange}
-                    />
-                    {errors.email && <p className="text-danger">{errors.email}</p>}
                 </div>
                 <div className="form-group">
                     <input

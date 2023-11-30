@@ -113,18 +113,6 @@ const EditProfile = ({ setTitle, getProfile, editProfile, userProfile, isProfile
           {errors.firstName && <p className="text-danger">{errors.firstName}</p>}
         </div>
         <div className="form-group">
-          <input
-            type="text"
-            placeholder="Last Name"
-            name="lastName"
-            value={lastName}
-            title="Last Name"
-            onChange={onChange}
-            onKeyDown={onChange}
-          />
-          {errors.lastName && <p className="text-danger">{errors.lastName}</p>}
-        </div>
-        <div className="form-group">
             <input
                 type="text"
                 placeholder="Middle Name"
@@ -135,6 +123,18 @@ const EditProfile = ({ setTitle, getProfile, editProfile, userProfile, isProfile
                 onKeyDown={onChange}
             />
             {errors.middleName && <p className="text-danger">{errors.middleName}</p>}
+        </div>
+        <div className="form-group">
+          <input
+            type="text"
+            placeholder="Last Name"
+            name="lastName"
+            value={lastName}
+            title="Last Name"
+            onChange={onChange}
+            onKeyDown={onChange}
+          />
+          {errors.lastName && <p className="text-danger">{errors.lastName}</p>}
         </div>
         {/* Add form inputs for other fields */}
         <div className="form-group">
