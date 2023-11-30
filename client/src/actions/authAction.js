@@ -2,7 +2,6 @@
 
 import api from '../utils/api';
 import { setAlert } from './alertAction';
-import { loadProfile } from './profileAction';
 import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
@@ -18,12 +17,13 @@ import {
 // Load User
 export const loadUser = () => async (dispatch) => {
   try {
-    const res = await api.get('/auth');
+    const res = await api.get('/profiles');
     
     dispatch({
       type: USER_LOADED,
       payload: res.data
     });
+    // dispatch(loadProfile());
   } catch (err) {
     dispatch({
       type: AUTH_ERROR
@@ -40,7 +40,7 @@ export const register = (formData) => async (dispatch) => {
       type: REGISTER_SUCCESS,
       payload: res.data
     });
-    dispatch(loadProfile());
+    dispatch(loadUser());
   } catch (err) {
     const errors = err.response.data.errors;
 

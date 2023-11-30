@@ -27,6 +27,7 @@
     "nodemailer-smtp-transport": "^2.7.4",
     "normalize-url": "^6.1.0",
     "request": "^2.88.2",
+    "uuidv4": "^6.2.13",
     "winston": "^3.3.3"
   },
   "devDependencies": {

@@ -11,13 +11,16 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const {findLoginByEmail} = require('../../services/authServices');
 const {check, validationResult} = require('express-validator');
+const generateUniqueId = require('../../utils/generateUniqueId');
+const {findLoginByUserId} = require('../../services/authServices');
 
 // @route   GET api/auth
 // @desc    Test route
 // @access  Public
 router.get('/', auth, async (req, res) => {
   try {
-    const user = await Login.findById(req.user.id).select('-password');
+    logger.info(`GET api/auth called. user: ${user}`);
+    const user = await findLoginByUserId(req.user.id);
     res.json(user);
   } catch (err) {
     console.error(err.message);
@@ -58,8 +61,12 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ errors: [{ msg: 'User login already exists' }] });
     }
 
+    // Generate unique userId using generateUniqueId util function
+    const userId = generateUniqueId();
+
     // Create a Register document
     const newProfile = new Profile({
+      userId,
       firstName,
       lastName,
       middleName,
@@ -75,6 +82,7 @@ router.post('/register', async (req, res) => {
     });
 
     const newLogin = new Login({
+      userId,
       email,
       password
     });
@@ -93,12 +101,12 @@ router.post('/register', async (req, res) => {
 
     // Save the Profile document
     const savedProfile = await saveProfile(newProfile);
-    console.log("saved profie id: " + savedProfile.id);
+    logger.info(`savedProfile userId: ${savedProfile.userId}`);
 
     // Return jwt
     const payload = {
       user: {
-        id: savedLogin.id
+        id: savedLogin.userId
       }
     };
 
@@ -160,7 +168,7 @@ router.post(
       // return jsonwebtoken
       const payload = {
         user: {
-          id: user.id,
+          id: user.userId,
         },
       };
 

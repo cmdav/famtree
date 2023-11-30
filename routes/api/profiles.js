@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
 const logger = require('../../utils/appLogger');
-const { findProfileByEmail, getProfileById } = require('../../services/profileServices');
-const { findLoginById } = require('../../services/authServices');
+const { findProfileByUserId, findProfileById } = require('../../services/profileServices');
+const { findLoginByUserId } = require('../../services/authServices');
 const {validateProfileForm} = require('../../utils/formvalidation');
 
 // @route   GET api/auth
@@ -12,8 +12,7 @@ const {validateProfileForm} = require('../../utils/formvalidation');
 router.get('/', auth, async (req, res) => {
     try {
         logger.info('GET api/profile called');
-        const login = await findLoginById(req.user.id);
-        const user = await findProfileByEmail(login.email);
+        const user = await findProfileByUserId(req.user.id);
         res.json(user);
     } catch (err) {
         logger.error(`Error in GET api/profile: ${err}`);
@@ -29,7 +28,7 @@ router.put('/:id', auth, async (req, res) => {
         logger.info('PUT api/profile called');
 
         const profileId = req.params.id;
-        const profile = await getProfileById(profileId);
+        const profile = await findProfileById(profileId);
 
         if (!profile) {
             return res.status(400).json({ errors: [{ msg: 'Profile does not exist' }] });
