@@ -9,7 +9,9 @@ import {
   //LOGIN_FAIL,
   LOGOUT,
   UPDATE_PASSWORD_SUCCESS,
-  UPDATE_PASSWORD_FAIL
+  UPDATE_PASSWORD_FAIL,
+  ADD_MEMBER_SUCCESS,
+  ADD_MEMBER_FAIL
 } from '../actions/types';
 
 const initialState = {
@@ -17,6 +19,7 @@ const initialState = {
   isAuthenticated: null,
   isPasswordUpdated: null,
   isUserRegistered: null,
+  isMemberAdded: null,
   loading: true,
   user: null
 };
@@ -30,6 +33,7 @@ function authReducer(state = initialState, action) {
         ...state,
         isAuthenticated: true,
         isPasswordUpdated: false,
+        isMemberAdded: false,
         loading: false,
         user: payload
       };
@@ -57,6 +61,18 @@ function authReducer(state = initialState, action) {
       return {
         ...state,
         isPasswordUpdated: false,
+        error: payload
+      };
+    case ADD_MEMBER_SUCCESS:
+      return {
+        ...state,
+        isMemberAdded: true,
+        error: null
+      };
+    case ADD_MEMBER_FAIL:
+      return {
+        ...state,
+        isMemberAdded: false,
         error: payload
       };
       case AUTH_ERROR:

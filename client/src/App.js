@@ -18,6 +18,7 @@ import store from './store';
 
 import './App.css';
 import EditProfile from './components/profile/EditProfile';
+import AddMember from './components/registration/AddMember';
 
 
 const App = () => {
@@ -57,8 +58,12 @@ const App = () => {
             path='dashboard'
             element={<PrivateRoute setTitle={setTitle} component={Dashboard} allowedRoles={['user']} />}
           />
-          
 
+          <Route
+            path='addmember'
+            element={<PrivateRoute setTitle={setTitle} component={AddMember} allowedRoles={['user']} />}
+          />
+          
         </Routes>
       </Router>
     </Provider>

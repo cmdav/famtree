@@ -11,7 +11,9 @@ import {
   LOGIN_FAIL,
   LOGOUT,
   UPDATE_PASSWORD_SUCCESS,
-  UPDATE_PASSWORD_FAIL
+  UPDATE_PASSWORD_FAIL,
+  ADD_MEMBER_SUCCESS,
+  ADD_MEMBER_FAIL
 } from './types';
 
 // Load User
@@ -50,6 +52,30 @@ export const register = (formData) => async (dispatch) => {
 
     dispatch({
       type: REGISTER_FAIL
+    });
+  }
+};
+
+// Add Family Member
+export const addMember = (formData) => async (dispatch) => {
+  try {
+     const res = await api.post('/auth/addmember', formData);
+    
+    dispatch({
+      type: ADD_MEMBER_SUCCESS,
+      payload: res.data
+    });
+    dispatch(setAlert('Family member added successfully', 'success'));
+    dispatch(loadUser());
+  } catch (err) {
+    const errors = err.response.data.errors;
+
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    dispatch({
+      type: ADD_MEMBER_FAIL
     });
   }
 };

@@ -126,6 +126,67 @@ router.post('/register', async (req, res) => {
   }
 });
 
+// @route   POST api/auth/addmember
+// @desc    Add member
+// @access  Private
+router.post('/addmember', auth, async (req, res) => {
+  try {
+    logger.info('POST api/auth/addmember called');
+    const errors = validateProfileForm(req.body, 'add');
+
+    if (Object.keys(errors).length > 0) {
+      logger.error('Validation errors found ');
+
+      // Print the validation errors to the console
+      for (const key in errors) {
+        if (errors.hasOwnProperty(key)) {
+          logger.error(errors[key]);
+        }
+      }
+
+      // convert the errors object to an json array and return it with status 400
+      return res.status(400).json({ errors: Object.values(errors) });
+    }
+
+    const { firstName, lastName, middleName, relationship, email, phone, street, city, state, postalCode, country, birthDate, profilePic } = req.body;
+    const profile = await findProfileByEmail(email);
+    if (profile) {
+      return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
+    }
+
+    // Generate unique userId using generateUniqueId util function
+    const userId = generateUniqueId();
+
+    // Create a Register document
+    const newProfile = new Profile({
+      userId,
+      firstName,
+      lastName,
+      middleName,
+      relationship,
+      email,
+      phone,
+      street,
+      city,
+      state,
+      postalCode,
+      country,
+      birthDate,
+      profilePic
+    });
+
+    // Save the Profile document
+    const savedProfile = await saveProfile(newProfile);
+    logger.info(`savedProfile userId: ${savedProfile.userId}`);
+
+    res.status(200).json({ savedProfile });
+
+  } catch (error) {
+    logger.error(`Error in POST api/auth/addmember: ${error}`);
+    res.status(500).send('Server error');
+  }
+});
+
 // @route   POST api/auth
 // @desc    Authenticate user & get token
 // @access  Public

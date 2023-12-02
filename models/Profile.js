@@ -25,6 +25,11 @@ const ProfileSchema = new Schema({
         required: true,
         unique: false
     },
+    relationship: {
+        type: String,
+        required: true,
+        unique: false
+    },
     email: {
         type: String,
         required: true,

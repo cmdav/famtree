@@ -8,6 +8,7 @@ module.exports.validateProfileForm = function (formData, mode) {
         firstName,
         lastName,
         middleName,
+        relationship,
         password,
         confirmPassword,
         email,
@@ -36,7 +37,7 @@ module.exports.validateProfileForm = function (formData, mode) {
     }
 
     // Only validate confirm password when the mode is 'create'
-    if (mode && mode === 'create') {
+    if (mode && (mode === 'create' || mode === 'create')) {
         if (password && password.trim() === '') {
             validationErrors.password = 'Password is required';
         } else if (!isValidPassword(password)) {
@@ -49,6 +50,13 @@ module.exports.validateProfileForm = function (formData, mode) {
             validationErrors.confirmPassword = 'Password must be at least 8 characters long and must contain at least one number and one special character';
         } else if (password !== confirmPassword) {
             validationErrors.confirmPassword = 'Passwords do not match';
+        }
+    }
+
+    // Only validate relationship when the mode is 'add' or 'Add'
+    if (mode && (mode === 'add' || mode === 'Add')) {
+        if (relationship.trim() === '') {
+            validationErrors.relationship = 'Relationship is required';
         }
     }
 

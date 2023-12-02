@@ -3,6 +3,7 @@ export function validateProfileForm (formData, mode) {
         firstName,
         lastName,
         middleName,
+        relationship,
         password,
         confirmPassword,
         email,
@@ -44,6 +45,13 @@ export function validateProfileForm (formData, mode) {
             validationErrors.confirmPassword = 'Password must be at least 8 characters long and must contain at least one number and one special character';
         } else if (password !== confirmPassword) {
             validationErrors.confirmPassword = 'Passwords do not match';
+        }
+    }
+
+    // Only validate relationship when the mode is 'add' or 'Add'
+    if (mode && (mode === 'add' || mode === 'Add')) {
+        if (relationship.trim() === '') {
+            validationErrors.relationship = 'Relationship is required';
         }
     }
 
