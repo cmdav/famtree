@@ -1,5 +1,6 @@
 const logger = require('../utils/appLogger');
 const Profile = require('../models/Profile');
+const generateUniqueId = require('../utils/generateUniqueId');
 
 // Find a profile by email
 async function findProfileByEmail(email){
@@ -49,9 +50,43 @@ async function findProfileById(id){
     }
 }
 
+// Create a profile using the profile model and form data
+function createProfile(profileData){
+    try {
+        logger.info('createProfile() called');
+
+        const { firstName, lastName, middleName, email, phone, street, city, state, postalCode, country, birthDate, profilePic } = profileData;
+
+        // Generate unique userId using generateUniqueId util function
+        const userId = generateUniqueId();
+
+        // Create a Register document
+        const profile = new Profile({
+            userId,
+            firstName,
+            lastName,
+            middleName,
+            email,
+            phone,
+            street,
+            city,
+            state,
+            postalCode,
+            country,
+            birthDate,
+            profilePic
+        });
+        
+        return profile;
+    } catch (error) {
+        logger.error(`Error in createProfile(): ${error}`);
+    }
+}
+
 module.exports = {
     findProfileByEmail,
     saveProfile,
     findProfileById,
-    findProfileByUserId
+    findProfileByUserId,
+    createProfile
 }

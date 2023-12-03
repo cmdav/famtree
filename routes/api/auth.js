@@ -3,7 +3,7 @@ const router = express.Router();
 const Login = require('../../models/Login');
 const auth = require('../../middleware/auth');
 const { validateProfileForm } = require('../../utils/formvalidation');
-const { findProfileByEmail, saveProfile, findProfileByUserId } = require('../../services/profileServices');
+const { findProfileByEmail, saveProfile, findProfileByUserId, createProfile } = require('../../services/profileServices');
 const Profile = require('../../models/Profile');
 const logger = require('../../utils/appLogger');
 const bcrypt = require('bcryptjs');
@@ -51,39 +51,25 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ errors: Object.values(errors) });
     }
 
-    const { firstName, lastName, middleName, password, confirmPassword, email, phone, street, city, state, postalCode, country, birthDate, profilePic } = req.body;
-    const profile = await findProfileByEmail(email);
-    if (profile) {
-      return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
-    }
+    const { password, email } = req.body;
+    let ifProfileExists = true;
+    let profile = await findProfileByEmail(email);
 
+    // Check if the login exists
     const login = await findLoginByEmail(email);
     if (login) {
       return res.status(400).json({ errors: [{ msg: 'User login already exists' }] });
     }
 
-    // Generate unique userId using generateUniqueId util function
-    const userId = generateUniqueId();
-
-    // Create a Register document
-    const newProfile = new Profile({
-      userId,
-      firstName,
-      lastName,
-      middleName,
-      email,
-      phone,
-      street,
-      city,
-      state,
-      postalCode,
-      country,
-      birthDate,
-      profilePic
-    });
-
-    const newLogin = new Login({
-      userId,
+    // Create a Register document if the user does not exist
+    if(!profile){
+      ifProfileExists = false;
+      profile = createProfile(req.body);
+    } 
+    
+    // Create a Login document
+    let newLogin = new Login({
+      userId: profile.userId,
       email,
       password
     });
@@ -92,22 +78,22 @@ router.post('/register', async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     newLogin.password = await bcrypt.hash(password, salt);
 
-    const savedLogin = await newLogin.save();
+    newLogin = await newLogin.save();
 
     // check if the login document is saved successfully
-    if (!savedLogin) {
+    if (!newLogin) {
       logger.error('Error in saving the login document');
       return res.status(500).send('Server error');
     }
 
     // Save the Profile document
-    const savedProfile = await saveProfile(newProfile);
-    logger.info(`savedProfile userId: ${savedProfile.userId}`);
+    profile = await saveProfile(profile);
+    logger.info(`savedProfile userId: ${profile.userId}`);
 
     // Return jwt
     const payload = {
       user: {
-        id: savedLogin.userId
+        id: profile.userId
       }
     };
 
@@ -117,7 +103,7 @@ router.post('/register', async (req, res) => {
       { expiresIn: config.get('jwtExpire') }, // TODO: change to 3600 for production
       (err, token) => {
         if (err) throw err;
-        res.status(200).json({ token, savedProfile });
+        res.status(200).json({ token, profile, message: ifProfileExists ? 'Profile exists in the system. You can change the data using Edit Profile.' : 'User registered successfully'});
       }
     );
 
