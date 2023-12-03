@@ -4,6 +4,17 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const RelationSchema = new Schema({
+    userId: {
+        type: String,
+        required: true,
+    },
+    relationshipType: {
+        type: String,
+        required: true,
+    }
+});
+
 const ProfileSchema = new Schema({
     userId: {
         type: String,
@@ -25,10 +36,9 @@ const ProfileSchema = new Schema({
         required: true,
         unique: false
     },
-    relationship: {
-        type: String,
-        required: true,
-        unique: false
+    relations: {
+        type: [RelationSchema],
+        default: []
     },
     email: {
         type: String,

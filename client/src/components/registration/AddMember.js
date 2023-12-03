@@ -131,6 +131,8 @@ const AddMember = ({ setTitle, addMember, isMemberAdded }) => {
                         onKeyDown={onChange}
                     >
                         <option value="0">* Select Relationship</option>
+                        <option value="Husband">Husband</option>
+                        <option value="Wife">Wife</option>
                         <option value="Father">Father</option>
                         <option value="Mother">Mother</option>
                         <option value="Brother">Brother</option>
@@ -139,8 +141,6 @@ const AddMember = ({ setTitle, addMember, isMemberAdded }) => {
                         <option value="Aunt">Aunt</option>
                         <option value="Son">Son</option>
                         <option value="Daughter">Daughter</option>
-                        <option value="Grand Father">Grand Father</option>
-                        <option value="Grand Mother">Grand Mother</option>
                     </select>
                     {errors.relationship && <p className="text-danger">{errors.relationship}</p>}
                 </div>

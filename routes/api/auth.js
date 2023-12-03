@@ -3,7 +3,7 @@ const router = express.Router();
 const Login = require('../../models/Login');
 const auth = require('../../middleware/auth');
 const { validateProfileForm } = require('../../utils/formvalidation');
-const { findProfileByEmail, saveProfile } = require('../../services/profileServices');
+const { findProfileByEmail, saveProfile, findProfileByUserId } = require('../../services/profileServices');
 const Profile = require('../../models/Profile');
 const logger = require('../../utils/appLogger');
 const bcrypt = require('bcryptjs');
@@ -13,6 +13,7 @@ const {findLoginByEmail} = require('../../services/authServices');
 const {check, validationResult} = require('express-validator');
 const generateUniqueId = require('../../utils/generateUniqueId');
 const {findLoginByUserId} = require('../../services/authServices');
+const {isRelationshipExist} = require('../../services/relationshipServices');
 
 // @route   GET api/auth
 // @desc    Test route
@@ -149,9 +150,10 @@ router.post('/addmember', auth, async (req, res) => {
     }
 
     const { firstName, lastName, middleName, relationship, email, phone, street, city, state, postalCode, country, birthDate, profilePic } = req.body;
-    const profile = await findProfileByEmail(email);
-    if (profile) {
-      return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
+
+    const isRelationshipFound = await isRelationshipExist(req.user.id, email);
+    if (isRelationshipFound) {
+      return res.status(400).json({ errors: [{ msg: 'Relationship already exists' }] });
     }
 
     // Generate unique userId using generateUniqueId util function
@@ -179,7 +181,18 @@ router.post('/addmember', auth, async (req, res) => {
     const savedProfile = await saveProfile(newProfile);
     logger.info(`savedProfile userId: ${savedProfile.userId}`);
 
-    res.status(200).json({ savedProfile });
+    // Create Relationship document
+    const relationshipProfile = {
+      userId: savedProfile.userId,
+      relationshipType: relationship
+    };
+
+    // Add the relationshipProfile to the profile document of the user
+    const profile = await findProfileByUserId(req.user.id);
+    profile.relations.push(relationshipProfile);
+    await saveProfile(profile);
+
+    res.status(200).json({ message: "Member Added" });
 
   } catch (error) {
     logger.error(`Error in POST api/auth/addmember: ${error}`);
