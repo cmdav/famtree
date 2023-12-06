@@ -3,9 +3,9 @@ from neo4j import GraphDatabase, RoutingControl
 URI = "neo4j+ssc://a4403cef.databases.neo4j.io"
 AUTH = ("neo4j", "NuBLxLVxnXt7jUlC9sknOMCImY0JB1_uY-QJ4tf8fsI")
 driver=GraphDatabase.driver(URI, auth=AUTH)
-
-
-def add_friend(driver, name, friend_name):
+## Davies , remember to create a new relation of Uncle and aunty to detech it 
+### this next line auto creates relatives after auto relationship score is calculated.
+def add_relative(name, friend_name):
     driver.execute_query(
         "MERGE (a:Person {name: $name}) "
         "MERGE (friend:Person {name: $friend_name}) "
@@ -22,14 +22,6 @@ def print_friends(driver, name):
     for record in records:
         print(record["friend.name"])
 
-def print_father(driver, name):
-    records, _, _ = driver.execute_query(
-        "MATCH (a:Person)-[:FATHER_OF]->(child) WHERE a.name = $name "
-        "RETURN child.name ORDER BY child.name",
-        name=name, database_="neo4j", routing_=RoutingControl.READ,
-    )
-    for record in records:
-        print(record["child.name"])
 
 def add_father(driver, name, child_name):
     driver.execute_query(
@@ -122,6 +114,25 @@ def matchNodeNew(nodename):
         #firstname = 'Davies'
         driver.close()
         return records[0]
+# Check last Name if it exists
+def matchLastName(nodename):
+        records, result_summary, keys =  driver.execute_query(
+                "MATCH (p:Person {lastName:'"+nodename+"'}) RETURN COUNT(p) > 0 ",
+                database_="neo4j",
+                )
+        #firstname = 'Davies'
+        driver.close()
+        return records[0]
+# Check first Name if it exists
+def matchFirstName(nodename):
+        records, result_summary, keys =  driver.execute_query(
+                "MATCH (p:Person {firstName:'"+nodename+"'}) RETURN COUNT(p) > 0 ",
+                database_="neo4j",
+                )
+        #firstname = 'Davies'
+        driver.close()
+        return records[0]
+
 def addNodeProperty(name,lastname,firstname,othername,email,phone,dateofbirth,userid,country,city):
      driver.execute_query(
                 "MATCH (p:Person {name:'"+name+"'}) SET p.lastName ='"+lastname+"',p.firstName='"+firstname+"',p.othername='"+othername+"',p.birthDate='"+dateofbirth+"',p.email='"+email+"',p.phone='"+phone+"',p.userid='"+userid+"',p.country='"+country+"',p.city='"+city+"'  RETURN p",
@@ -148,7 +159,4 @@ with GraphDatabase.driver(URI, auth=AUTH) as driver:
     #add_father(driver, "Richard", "BabyG")
     #add_father(driver, "Sud", "Alloy")
     #add_father(driver, "Salim", "Alloy")
-    #add_father(driver, "Davies", "Michael")
-   # print_father(driver, "Salim")
-    #print_father(driver, "Sud")
-    #print_father(driver, "Richard")
+   

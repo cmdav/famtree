@@ -20,7 +20,7 @@ db = client["FamTree"]
 collection = db["profiles"]
 
 def buildRelationship(pnodeName,id,rel):
-    ## Loop through the collection of rows returned from Mongo DB
+    ## Loop through the collection of rows returned from Mongo DB . Davies remember to add filter to this for loop
     for coll in collection.find({"userId":id},{"_id":False}):
         res = {key: coll[key] for key in coll.keys()  & {'firstName', 'lastName','middleName','email','phone','birthDate','userId','country','city'}}
         nodeName2 = str(res['lastName'])+str(res['birthDate'])+str(res['firstName'])+str(res['middleName'])
@@ -56,6 +56,6 @@ def buildRelationship(pnodeName,id,rel):
         ##Add Relationships
         
 
-buildRelationship('Sema1989-08-26SalimAbdulanam','9b7f785a-11b2-4cb2-b248-859fc45b4581','sister')
+#buildRelationship('Sema1989-08-26SalimAbdulanam','9b7f785a-11b2-4cb2-b248-859fc45b4581','sister')
 
     #print(str(res['firstName']))

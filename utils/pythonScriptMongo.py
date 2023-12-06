@@ -21,7 +21,7 @@ try:
     
     db = client["FamTree"]
     collection = db["profiles"]
-    for coll in collection.find():   ## Loop through the collection of rows returned from Mongo DB
+    for coll in collection.find():   ## Davies remember to define the Primary key after Loop through the collection of rows returned from Mongo DB
         res = {key: coll[key] for key in coll.keys()  & {'firstName', 'lastName','middleName','email','phone','birthDate','userId','country','city','relations'}}
         #print(str(res['firstName']))
         fname = res['firstName']
@@ -30,7 +30,7 @@ try:
         ## Generate unique Key
         nodeName = str(res['lastName'])+str(res['birthDate'])+str(res['firstName'])+str(res['middleName'])
         
-        ### Get the relationship Marching Score
+        ### Davies Get the relationship Marching Score 
         fCheck ='False'
         rCheck = 'True'
         name = neo4j.matchNodeNew(nodeName)
@@ -40,7 +40,7 @@ try:
             if rCheck in str(addNode):
                 neo4j.addNodeProperty(nodeName,res['lastName'],res['firstName'],res['middleName'],res['email'],res['phone'],res['birthDate'],res['userId'],res['country'],res['city'])
                 print(str(nodeName) + ' Node has been created')
-                ##Build relationships for node
+                ##Build relationships for node . Each node. Davies write an updated version of this next line
                 for x in res['relations']:
                     rel.buildRelationship(nodeName,x['userId'],x['relationshipType'])
             else:
@@ -53,7 +53,7 @@ try:
                 rel.buildRelationship(nodeName,x['userId'],x['relationshipType'])
                 
         #neo4j.marchScore(res['firstName'],res['lastName'],res['middleName'],res['email'],res['phone'],res['birthDate']) 
-           
+         #### should this be updated yet nooooo  
 except Exception as e:
     print(e)
 
