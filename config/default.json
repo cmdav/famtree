@@ -1,5 +1,5 @@
 {
-  "mongoURI": "mongodb://127.0.0.1:27017/famtree",
+  "mongoURI": "mongodb+srv://applogin:wCl6QndJsayuLtOq@cluster0.ygx79sq.mongodb.net/FamTree",
   "jwtSecret": "secretkey",
   "jwtExpire": 360000,
   "enableEmail": true

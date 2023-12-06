@@ -7,11 +7,13 @@ from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from google.auth.exceptions import RefreshError
 from googleapiclient.errors import HttpError
+import sys
 
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 
-def main():
+def send_notification():
     try:
+        print("inside python code")
         creds = None
         # The file token.json stores the user's access and refresh tokens and is
         # created automatically when the authorization flow completes for the first time.
@@ -25,7 +27,7 @@ def main():
                 except RefreshError as e:
                     print(f"Error refreshing credentials: {e}")
             else:
-                flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
+                flow = InstalledAppFlow.from_client_secrets_file('config/credentials.json', SCOPES)
                 creds = flow.run_local_server(port=0)
             # Save the credentials for the next run
             with open('token.json', 'w') as token:
@@ -33,9 +35,11 @@ def main():
 
         service = build('gmail', 'v1', credentials=creds)
 
-        message = MIMEText('This is the body of the email')
-        to_address = 'aloysius397@gmail.com'
-        subject = 'Email Subject'
+        subject = sys.argv[1]
+        to_address = sys.argv[2]
+        message = sys.argv[3]
+
+        print(subject, to_address, message)
 
         # Set the recipient in the 'To' field of the raw message
         create_message = {
@@ -43,6 +47,7 @@ def main():
                 f'To: {to_address}\nSubject: {subject}\n\nThis is the body of the email'.encode()
             ).decode()
         }
+
 
         try:
             sent_message = service.users().messages().send(userId="me", body=create_message).execute()
@@ -52,5 +57,4 @@ def main():
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
 
-if __name__ == '__main__':
-    main()
+send_notification()
