@@ -14,6 +14,8 @@ const {check, validationResult} = require('express-validator');
 const generateUniqueId = require('../../utils/generateUniqueId');
 const {findLoginByUserId} = require('../../services/authServices');
 const {isRelationshipExist} = require('../../services/relationshipServices');
+const {sendMail} = require('../../utils/sendMail');
+const {createNeoRelationship} = require('../../utils/createNeoRelationship');
 
 // @route   GET api/auth
 // @desc    Test route
@@ -89,6 +91,12 @@ router.post('/register', async (req, res) => {
     // Save the Profile document
     profile = await saveProfile(profile);
     logger.info(`savedProfile userId: ${profile.userId}`);
+
+    // Send email notification to the user
+    const to_email = email;
+    const subject = 'Registration successful';
+    const message = `Your registration is successful.`;
+    sendMail(to_email, subject, message);
 
     // Return jwt
     const payload = {
@@ -177,6 +185,18 @@ router.post('/addmember', auth, async (req, res) => {
     const profile = await findProfileByUserId(req.user.id);
     profile.relations.push(relationshipProfile);
     await saveProfile(profile);
+
+    // Find the current user's profile
+    const currentUserProfile = await findProfileByUserId(req.user.id);
+
+    // Send email notification to the user
+    const to_email = currentUserProfile.email;
+    const subject = 'New member added';
+    const message = `A new member ${firstName} ${lastName} has been added to your profile.`;
+    sendMail(to_email, subject, message);
+
+    // Create Neo4j Relationship
+    createNeoRelationship();
 
     res.status(200).json({ message: "Member Added" });
 
