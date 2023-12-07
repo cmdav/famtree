@@ -14,8 +14,15 @@ const Dashboard = ({
   useEffect(() => {
     setTitle('Dashboard'); // update the title when the component is mounted
     loadProfile();
-    plotFamilyTree();
-  }, [setTitle, loadProfile, plotFamilyTree]);
+  }, [setTitle, loadProfile]);
+
+  // Add delay to load family tree image
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      plotFamilyTree();
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [plotFamilyTree]);
 
   return (
     <section className="container">
