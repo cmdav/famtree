@@ -766,3 +766,16 @@ label.selected {
 .table.notification-list th.date {
   width: 35%;
 }
+
+/* CSS for family tree graph */
+.family-tree {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  width: 60%;
+  height: 100%;
+  overflow: auto;
+  background-color: #fff;
+}

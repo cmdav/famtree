@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import {loadProfile, plotFamilyTree} from '../../actions/profileAction';
+import { loadProfile, plotFamilyTree } from '../../actions/profileAction';
 
 const Dashboard = ({
   setTitle,
@@ -23,7 +23,17 @@ const Dashboard = ({
       <p className="lead">
         <i className="fas fa-user" /> Welcome {userProfile && userProfile.firstName}
       </p>
-      
+
+      {/* 
+        Display family tree graph. Fetch graph from http://localhost:8081/userid.jpg
+        where userid is userProfile.userId
+      */}
+      <div className="family-tree">
+        <img
+          src={`http://localhost:8081/${userProfile && userProfile.userId}.jpg`}
+          alt="Family Tree"
+        />
+      </div>
     </section>
   );
 };
@@ -38,6 +48,6 @@ const mapStateToProps = (state) => ({
   userProfile: state.profileReducer.userProfile,
 });
 
-export default connect(mapStateToProps, {loadProfile, plotFamilyTree})(
+export default connect(mapStateToProps, { loadProfile, plotFamilyTree })(
   Dashboard
 );

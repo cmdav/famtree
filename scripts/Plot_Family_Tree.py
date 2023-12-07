@@ -14,7 +14,6 @@ def build_family_tree():
 
     # Retrieve the user document for using the userId
     user_document = collection.find_one({"userId": userId})
-    # user_document = collection.find_one({"firstName": "Salim"})
 
     # Create a directed graph
     G = nx.DiGraph()
@@ -41,12 +40,11 @@ def build_family_tree():
     # Visualize the graph
     pos = nx.spring_layout(G)
     plt.figure(figsize=(12, 8))
-    nx.draw_networkx(G, pos, with_labels=True, node_size=3000, node_color='lightblue', font_size=12, font_weight='bold')
+    nx.draw_networkx(G, pos, with_labels=True, node_size=10000, node_color='lightblue', font_size=12, font_weight='bold')
     labels = nx.get_edge_attributes(G, 'label')
     nx.draw_networkx_edge_labels(G, pos, edge_labels=labels, font_size=10)
     plt.title(f"Family Tree: {user_document['firstName']} {user_document['lastName']}")
     plt.axis('off')
-    # plt.show()
 
     # Save the graph as an image to public_files/images directory
     plt.savefig(f"public_files/images/{user_document['userId']}.jpg")
