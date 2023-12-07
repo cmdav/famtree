@@ -2,3 +2,4 @@ node_modules
 serverlogs
 .DS_Store
 scripts/__pycache__
+public_files

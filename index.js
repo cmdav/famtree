@@ -26,6 +26,9 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+// set up public folder to serve static files
+myApp.use(express.static('public_files/images'));
+
 //assigning the port
 const PORT = process.env.PORT || 8081;
 myApp.listen(PORT, () => console.log(`Server started on port ${PORT}`));

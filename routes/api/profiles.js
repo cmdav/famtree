@@ -3,8 +3,8 @@ const router = express.Router();
 const auth = require('../../middleware/auth');
 const logger = require('../../utils/appLogger');
 const { findProfileByUserId, findProfileById } = require('../../services/profileServices');
-const { findLoginByUserId } = require('../../services/authServices');
 const {validateProfileForm} = require('../../utils/formvalidation');
+const {plotFamilyTree} = require('../../utils/plotFamilyTree');
 
 // @route   GET api/auth
 // @desc    Test route
@@ -16,6 +16,23 @@ router.get('/', auth, async (req, res) => {
         res.json(user);
     } catch (err) {
         logger.error(`Error in GET api/profile: ${err}`);
+        res.status(500).send('Server error');
+    }
+});
+
+// @route   GET api/profile/plotGraph
+// @desc    Plot family tree
+// @access  Public
+router.get('/plotGraph', auth, async (req, res) => {
+    try {
+        logger.info('GET api/profile/plotGraph called');
+        const user = await findProfileByUserId(req.user.id);
+        
+        // Plot the family tree
+        plotFamilyTree(user.userId);
+        res.json("Family tree plotted successfully");
+    } catch (err) {
+        logger.error(`Error in GET api/profile/plotGraph: ${err}`);
         res.status(500).send('Server error');
     }
 });

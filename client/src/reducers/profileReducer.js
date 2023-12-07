@@ -7,6 +7,8 @@ import {
     GET_PROFILE_FAIL,
     PROFILE_LOADED_SUCCESS,
     PROFILE_LOADED_FAIL,
+    PLOT_FAMILY_TREE_SUCCESS,
+    PLOT_FAMILY_TREE_FAIL,
     LOGOUT
 } from '../actions/types';
 
@@ -43,6 +45,17 @@ function profileReducer(state = initialState, action) {
             loading: false
         };
         case UPDATE_PROFILE_FAIL:
+        return {
+            ...state,
+            error: payload,
+            loading: false
+        };
+        case PLOT_FAMILY_TREE_SUCCESS:
+        return {
+            ...state,
+            loading: false
+        };
+        case PLOT_FAMILY_TREE_FAIL:
         return {
             ...state,
             error: payload,
