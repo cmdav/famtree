@@ -36,6 +36,11 @@ const ProfileSchema = new Schema({
         required: true,
         unique: false
     },
+    gender: {
+        type: String,
+        required: true,
+        unique: false
+    },
     relations: {
         type: [RelationSchema],
         default: []

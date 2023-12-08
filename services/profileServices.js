@@ -55,7 +55,7 @@ function createProfile(profileData){
     try {
         logger.info('createProfile() called');
 
-        const { firstName, lastName, middleName, email, phone, street, city, state, postalCode, country, birthDate, profilePic } = profileData;
+        const { firstName, lastName, middleName, gender, email, phone, street, city, state, postalCode, country, birthDate, profilePic } = profileData;
 
         // Generate unique userId using generateUniqueId util function
         const userId = generateUniqueId();
@@ -66,6 +66,7 @@ function createProfile(profileData){
             firstName,
             lastName,
             middleName,
+            gender,
             email,
             phone,
             street,

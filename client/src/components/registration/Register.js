@@ -18,6 +18,7 @@ const Register = ({ setTitle, register, isUserRegistered }) => {
         firstName: '',
         lastName: '',
         middleName: '',
+        gender: '',
         password: '',
         confirmPassword: '',
         email: '',
@@ -33,7 +34,7 @@ const Register = ({ setTitle, register, isUserRegistered }) => {
 
     const [errors, setErrors] = useState({});
 
-    const { firstName, lastName, middleName, password, confirmPassword, email, phone, street, city, state, postalCode, country, birthDate, profilePic } = formData;
+    const { firstName, lastName, middleName, gender, password, confirmPassword, email, phone, street, city, state, postalCode, country, birthDate, profilePic } = formData;
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -109,6 +110,21 @@ const Register = ({ setTitle, register, isUserRegistered }) => {
                         onKeyDown={onChange}
                     />
                     {errors.lastName && <p className="text-danger">{errors.lastName}</p>}
+                </div>
+                {/* Add Gender dropdown*/}
+                <div className="form-group">
+                    <select
+                        name="gender"
+                        value={gender}
+                        title='Gender'
+                        onChange={onChange}
+                        onKeyDown={onChange}
+                    >
+                        <option value="0">* Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                    {errors.gender && <p className="text-danger">{errors.gender}</p>}
                 </div>
                 <div className="form-group">
                     <input

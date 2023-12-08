@@ -12,6 +12,7 @@ const EditProfile = ({ setTitle, getProfile, editProfile, userProfile, isProfile
     firstName: '',
     lastName: '',
     middleName: '',
+    gender: '',
     email: '',
     phone: '',
     street: '',
@@ -34,6 +35,7 @@ const EditProfile = ({ setTitle, getProfile, editProfile, userProfile, isProfile
         firstName: userProfile.firstName,
         lastName: userProfile.lastName,
         middleName: userProfile.middleName,
+        gender: userProfile.gender,
         email: userProfile.email,
         phone: userProfile.phone,
         street: userProfile.street,
@@ -53,6 +55,7 @@ const EditProfile = ({ setTitle, getProfile, editProfile, userProfile, isProfile
     firstName,
     lastName,
     middleName,
+    gender,
     email,
     phone,
     street,
@@ -86,7 +89,7 @@ const EditProfile = ({ setTitle, getProfile, editProfile, userProfile, isProfile
     }
 
     setErrors({});
-    
+
     editProfile(userProfile._id, formData);
   };
 
@@ -113,16 +116,16 @@ const EditProfile = ({ setTitle, getProfile, editProfile, userProfile, isProfile
           {errors.firstName && <p className="text-danger">{errors.firstName}</p>}
         </div>
         <div className="form-group">
-            <input
-                type="text"
-                placeholder="Middle Name"
-                name="middleName"
-                value={middleName}
-                title="Other Name"
-                onChange={onChange}
-                onKeyDown={onChange}
-            />
-            {errors.middleName && <p className="text-danger">{errors.middleName}</p>}
+          <input
+            type="text"
+            placeholder="Middle Name"
+            name="middleName"
+            value={middleName}
+            title="Other Name"
+            onChange={onChange}
+            onKeyDown={onChange}
+          />
+          {errors.middleName && <p className="text-danger">{errors.middleName}</p>}
         </div>
         <div className="form-group">
           <input
@@ -135,6 +138,21 @@ const EditProfile = ({ setTitle, getProfile, editProfile, userProfile, isProfile
             onKeyDown={onChange}
           />
           {errors.lastName && <p className="text-danger">{errors.lastName}</p>}
+        </div>
+        {/* Add Gender dropdown*/}
+        <div className="form-group">
+          <select
+            name="gender"
+            value={gender}
+            title='Gender'
+            onChange={onChange}
+            onKeyDown={onChange}
+          >
+            <option value="0">* Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+          {errors.gender && <p className="text-danger">{errors.gender}</p>}
         </div>
         {/* Add form inputs for other fields */}
         <div className="form-group">

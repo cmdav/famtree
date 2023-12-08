@@ -3,6 +3,7 @@ export function validateProfileForm (formData, mode) {
         firstName,
         lastName,
         middleName,
+        gender,
         relationship,
         password,
         confirmPassword,
@@ -53,6 +54,11 @@ export function validateProfileForm (formData, mode) {
         if (relationship.trim() === '') {
             validationErrors.relationship = 'Relationship is required';
         }
+    }
+
+    // Validate gender
+    if (gender.trim() === '') {
+        validationErrors.gender = 'Gender is required';
     }
 
     if (email.trim() === '') {

@@ -143,7 +143,7 @@ router.post('/addmember', auth, async (req, res) => {
       return res.status(400).json({ errors: Object.values(errors) });
     }
 
-    const { firstName, lastName, middleName, relationship, email, phone, street, city, state, postalCode, country, birthDate, profilePic } = req.body;
+    const { firstName, lastName, middleName, gender, relationship, email, phone, street, city, state, postalCode, country, birthDate, profilePic } = req.body;
 
     const isRelationshipFound = await isRelationshipExist(req.user.id, email);
     if (isRelationshipFound) {
@@ -159,6 +159,7 @@ router.post('/addmember', auth, async (req, res) => {
       firstName,
       lastName,
       middleName,
+      gender,
       relationship,
       email,
       phone,

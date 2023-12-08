@@ -67,12 +67,11 @@ router.put('/:id', auth, async (req, res) => {
             return res.status(400).json({ errors: Object.values(errors) });
         }
 
-
-
-        const { firstName, lastName, middleName, email, phone, street, city, state, postalCode, country, birthDate, profilePic } = req.body;
+        const { firstName, lastName, middleName, gender, email, phone, street, city, state, postalCode, country, birthDate, profilePic } = req.body;
         profile.firstName = firstName;
         profile.lastName = lastName;
         profile.middleName = middleName;
+        profile.gender = gender;
         profile.email = email;
         profile.phone = phone;
         profile.street = street;
