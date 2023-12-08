@@ -4,18 +4,17 @@ const Login = require('../../models/Login');
 const auth = require('../../middleware/auth');
 const { validateProfileForm } = require('../../utils/formvalidation');
 const { findProfileByEmail, saveProfile, findProfileByUserId, createProfile } = require('../../services/profileServices');
-const Profile = require('../../models/Profile');
 const logger = require('../../utils/appLogger');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const {findLoginByEmail} = require('../../services/authServices');
 const {check, validationResult} = require('express-validator');
-const generateUniqueId = require('../../utils/generateUniqueId');
 const {findLoginByUserId} = require('../../services/authServices');
 const {isRelationshipExist} = require('../../services/relationshipServices');
 const {sendMail} = require('../../utils/sendMail');
 const {createNeoRelationship} = require('../../utils/createNeoRelationship');
+const {plotFamilyTree} = require('../../utils/plotFamilyTree');
 
 // @route   GET api/auth
 // @desc    Test route
@@ -54,7 +53,7 @@ router.post('/register', async (req, res) => {
     }
 
     const { password, email } = req.body;
-    let ifProfileExists = true;
+    let isProfileExists = true;
     let profile = await findProfileByEmail(email);
 
     // Check if the login exists
@@ -65,7 +64,7 @@ router.post('/register', async (req, res) => {
 
     // Create a Register document if the user does not exist
     if(!profile){
-      ifProfileExists = false;
+      isProfileExists = false;
       profile = createProfile(req.body);
     } 
     
@@ -92,6 +91,12 @@ router.post('/register', async (req, res) => {
     profile = await saveProfile(profile);
     logger.info(`savedProfile userId: ${profile.userId}`);
 
+    // Create Neo4j Relationship
+    createNeoRelationship();
+
+    // Plot the family tree
+    plotFamilyTree(profile.userId);
+
     // Send email notification to the user
     const to_email = email;
     const subject = 'Registration successful';
@@ -111,7 +116,7 @@ router.post('/register', async (req, res) => {
       { expiresIn: config.get('jwtExpire') }, // TODO: change to 3600 for production
       (err, token) => {
         if (err) throw err;
-        res.status(200).json({ token, profile, message: ifProfileExists ? 'Profile exists in the system. You can change the data using Edit Profile.' : 'User registered successfully'});
+        res.status(200).json({ token, profile, message: isProfileExists ? 'Profile exists in the system. You can change the data using Edit Profile.' : 'User registered successfully'});
       }
     );
 
@@ -143,63 +148,50 @@ router.post('/addmember', auth, async (req, res) => {
       return res.status(400).json({ errors: Object.values(errors) });
     }
 
-    const { firstName, lastName, middleName, gender, relationship, email, phone, street, city, state, postalCode, country, birthDate, profilePic } = req.body;
+    const { relationship, email} = req.body;
 
     const isRelationshipFound = await isRelationshipExist(req.user.id, email);
     if (isRelationshipFound) {
       return res.status(400).json({ errors: [{ msg: 'Relationship already exists' }] });
     }
 
-    // Generate unique userId using generateUniqueId util function
-    const userId = generateUniqueId();
+    // Find the user using email
+    const isProfileExist = true;
+    let profile = await findProfileByEmail(email);
 
-    // Create a Register document
-    const newProfile = new Profile({
-      userId,
-      firstName,
-      lastName,
-      middleName,
-      gender,
-      relationship,
-      email,
-      phone,
-      street,
-      city,
-      state,
-      postalCode,
-      country,
-      birthDate,
-      profilePic
-    });
+    if(!profile){
+      isProfileExist = false;
+      profile = createProfile(req.body);
 
-    // Save the Profile document
-    const savedProfile = await saveProfile(newProfile);
-    logger.info(`savedProfile userId: ${savedProfile.userId}`);
+      // Save the Profile document
+      profile = await saveProfile(profile);
+      logger.info(`saved profile userId: ${profile.userId}`);
+    }
 
     // Create Relationship document
     const relationshipProfile = {
-      userId: savedProfile.userId,
+      userId: profile.userId,
       relationshipType: relationship
     };
 
     // Add the relationshipProfile to the profile document of the user
-    const profile = await findProfileByUserId(req.user.id);
-    profile.relations.push(relationshipProfile);
-    await saveProfile(profile);
-
-    // Find the current user's profile
-    const currentUserProfile = await findProfileByUserId(req.user.id);
+    const currentUser = await findProfileByUserId(req.user.id);
+    currentUser.relations.push(relationshipProfile);
+    await saveProfile(currentUser);
 
     // Send email notification to the user
-    const to_email = currentUserProfile.email;
+    const to_email = currentUser.email;
     const subject = 'New member added';
-    const message = `A new member ${firstName} ${lastName} has been added to your profile.`;
+    const message = `A new member ${profile.firstName} ${profile.lastName} has been added to your profile.`;
     sendMail(to_email, subject, message);
 
     // Create Neo4j Relationship
     createNeoRelationship();
 
-    res.status(200).json({ message: "Member Added" });
+    // Plot the family tree
+    plotFamilyTree(currentUser.userId);
+    
+    res.status(200).json({ message: isProfileExist ? 'Profile exists in the system. Member added using the existing data' : 'Member added successfully' });
 
   } catch (error) {
     logger.error(`Error in POST api/auth/addmember: ${error}`);

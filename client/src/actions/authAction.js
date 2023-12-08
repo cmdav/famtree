@@ -64,12 +64,13 @@ export const register = (formData) => async (dispatch) => {
 export const addMember = (formData) => async (dispatch) => {
   try {
      const res = await api.post('/auth/addmember', formData);
+     const {message} = res.data;
     
     dispatch({
       type: ADD_MEMBER_SUCCESS,
       payload: res.data
     });
-    dispatch(setAlert('Family member added successfully', 'success'));
+    dispatch(setAlert(message, 'success'));
     dispatch(loadUser());
   } catch (err) {
     const errors = err.response.data.errors;

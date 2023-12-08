@@ -98,6 +98,18 @@ const AddMember = ({ setTitle, addMember, isMemberAdded }) => {
                     />
                     {errors.middleName && <p className="text-danger">{errors.middleName}</p>}
                 </div>
+                <div className="form-group">
+                    <input
+                        type="text"
+                        placeholder="Last Name"
+                        name="lastName"
+                        value={lastName}
+                        title='Last Name'
+                        onChange={onChange}
+                        onKeyDown={onChange}
+                    />
+                    {errors.lastName && <p className="text-danger">{errors.lastName}</p>}
+                </div>
                 {/* Add Gender dropdown*/}
                 <div className="form-group">
                     <select
@@ -112,18 +124,6 @@ const AddMember = ({ setTitle, addMember, isMemberAdded }) => {
                         <option value="Female">Female</option>
                     </select>
                     {errors.gender && <p className="text-danger">{errors.gender}</p>}
-                </div>
-                <div className="form-group">
-                    <input
-                        type="text"
-                        placeholder="Last Name"
-                        name="lastName"
-                        value={lastName}
-                        title='Last Name'
-                        onChange={onChange}
-                        onKeyDown={onChange}
-                    />
-                    {errors.lastName && <p className="text-danger">{errors.lastName}</p>}
                 </div>
                 <div className="form-group">
                     <input
