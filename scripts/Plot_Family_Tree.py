@@ -78,8 +78,6 @@ def build_family_tree():
                         G.nodes[related_user_name]['pos'] = (-1 , 1-sibling_counter)
                         sibling_counter += 0.75
 
-                    build_family_tree(related_user)
-
     build_family_tree(user_document)
 
     # Visualize the graph
