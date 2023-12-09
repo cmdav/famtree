@@ -7,7 +7,7 @@ export const linksByRole = {
         { to: '/dashboard', text: 'Dashboard', icon: 'fas fa-chart-line', component: 'Dashboard' },
         { to: '/addmember', text: 'Add Member', component: 'AddMember' },
         { to: '/editprofile', text: 'Edit Profile', component: 'EditProfile' },
-        { to: '/editpassword', text: 'Edit Password' },
+        // { to: '/editpassword', text: 'Edit Password' },
         { to: '/logout', text: 'Logout', icon: 'fas fa-sign-out-alt', onClick: logout }
     ]
 };
