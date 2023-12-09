@@ -3,3 +3,4 @@ serverlogs
 .DS_Store
 scripts/__pycache__
 public_files
+client/build
