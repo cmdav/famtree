@@ -156,7 +156,7 @@ router.post('/addmember', auth, async (req, res) => {
     }
 
     // Find the user using email
-    const isProfileExist = true;
+    let isProfileExist = true;
     let profile = await findProfileByEmail(email);
 
     if(!profile){

@@ -37,7 +37,7 @@ const Dashboard = ({
       */}
       <div className="family-tree">
         <img
-          src={`http://localhost:8081/${userProfile && userProfile.userId}.jpg`}
+          src={`http://localhost:8081/${userProfile && userProfile.userId}.jpg?${Date.now()}`}
           alt="Family Tree"
         />
       </div>
