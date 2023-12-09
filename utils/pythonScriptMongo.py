@@ -4,6 +4,7 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 import mongodb_python_neo4j as neo4j
 import relations as rel
+import relationshipscore as relscore
 from neo4j import GraphDatabase, RoutingControl
 
 ##################################################### MONGO
@@ -22,7 +23,7 @@ try:
     db = client["FamTree"]
     collection = db["profiles"]
     for coll in collection.find():   ## Davies remember to define the Primary key after Loop through the collection of rows returned from Mongo DB
-        res = {key: coll[key] for key in coll.keys()  & {'firstName', 'lastName','middleName','email','phone','birthDate','userId','country','city','relations'}}
+        res = {key: coll[key] for key in coll.keys()  & {'firstName', 'lastName','middleName','email','phone','birthDate','userId','country','city','relations','gender'}}
         #print(str(res['firstName']))
         fname = res['firstName']
         lname = res['lastName']
@@ -38,19 +39,21 @@ try:
         if fCheck in str(name) :
             addNode = neo4j.addNode(nodeName)
             if rCheck in str(addNode):
-                neo4j.addNodeProperty(nodeName,res['lastName'],res['firstName'],res['middleName'],res['email'],res['phone'],res['birthDate'],res['userId'],res['country'],res['city'])
+                neo4j.addNodeProperty(nodeName,res['lastName'],res['firstName'],res['middleName'],res['email'],res['phone'],res['birthDate'],res['userId'],res['country'],res['city'],res['gender'])
                 print(str(nodeName) + ' Node has been created')
+                #Match this user with other Nodes by score of 10 (Same LastName)
+                relscore.relationshipscore(nodeName,res['firstName'],res['lastName'],res['middleName'],res['email'],res['phone'],res['birthDate'],res['userId'])
                 ##Build relationships for node . Each node. Davies write an updated version of this next line
                 for x in res['relations']:
-                    rel.buildRelationship(nodeName,x['userId'],x['relationshipType'])
+                    rel.buildRelationship(nodeName,res['gender'],x['userId'],x['relationshipType'])
             else:
                 print('Node could not be created.')
         else:
-            neo4j.addNodeProperty(nodeName,res['lastName'],res['firstName'],res['middleName'],res['email'],res['phone'],res['birthDate'],res['userId'],res['country'],res['city'])
+            neo4j.addNodeProperty(nodeName,res['lastName'],res['firstName'],res['middleName'],res['email'],res['phone'],res['birthDate'],res['userId'],res['country'],res['city'],res['gender'])
             print(str(nodeName) + ' Already Exists')
             ##Build relationships for node
             for x in res['relations']:
-                rel.buildRelationship(nodeName,x['userId'],x['relationshipType'])
+                rel.buildRelationship(nodeName,res['gender'],x['userId'],x['relationshipType'])
                 
         #neo4j.marchScore(res['firstName'],res['lastName'],res['middleName'],res['email'],res['phone'],res['birthDate']) 
          #### should this be updated yet nooooo  

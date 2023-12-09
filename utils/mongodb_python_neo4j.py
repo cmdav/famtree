@@ -12,6 +12,15 @@ def add_relative(name, friend_name):
         "MERGE (a)-[:KNOWS]->(friend)",
         name=name, friend_name=friend_name, database_="neo4j",
     )
+def getUserId(name):
+    records,_,_=driver.execute_query(
+    "MERGE (p:Person {name: '"+name+"'}) RETURN p.userid",
+    database_="neo4j",
+    )
+    driver.close()
+    for record in records:
+         return record["p.userid"]
+
 
 def print_friends(driver, name):
     records, _, _ = driver.execute_query(
@@ -133,16 +142,16 @@ def matchFirstName(nodename):
         driver.close()
         return records[0]
 
-def addNodeProperty(name,lastname,firstname,othername,email,phone,dateofbirth,userid,country,city):
+def addNodeProperty(name,lastname,firstname,othername,email,phone,dateofbirth,userid,country,city,gender):
      driver.execute_query(
-                "MATCH (p:Person {name:'"+name+"'}) SET p.lastName ='"+lastname+"',p.firstName='"+firstname+"',p.othername='"+othername+"',p.birthDate='"+dateofbirth+"',p.email='"+email+"',p.phone='"+phone+"',p.userid='"+userid+"',p.country='"+country+"',p.city='"+city+"'  RETURN p",
+                "MATCH (p:Person {name:'"+name+"'}) SET p.lastName ='"+lastname+"',p.firstName='"+firstname+"',p.othername='"+othername+"',p.birthDate='"+dateofbirth+"',p.email='"+email+"',p.phone='"+phone+"',p.userid='"+userid+"',p.country='"+country+"',p.city='"+city+"',p.gender='"+gender+"'  RETURN p",
                 database_="neo4j",
                 )
         #firstname = 'Davies'
      driver.close()
      return True
 
-def marchScore(driver,firstname, lastName, middleName, email, phone, birthDate):
+def marchScore(firstname, lastName, middleName, email, phone, birthDate):
 
     score = driver.execute_query(
         "MATCH (a:Person {firstname: $firstname}) "
@@ -153,6 +162,26 @@ def marchScore(driver,firstname, lastName, middleName, email, phone, birthDate):
     )
      
     return score;
+def marchPerfectScore(firstname, lastName, middleName, email, phone):
+    records, result_summary, keys = driver.execute_query(
+        "MATCH (a:Person WHERE a.lastName='"+lastName+"' and a.firstName<>'"+firstname+"' and a.othername<>'"+middleName+"'  and a.phone<>'"+phone+"') RETURN a.userid ",
+        database_="neo4j",
+                )
+        #firstname = 'Davies'
+    driver.close()
+
+    return records
+
+def checkFatherRelationship(userid):
+     driver.execute_query("MATCH (p:Person WHERE p.userid='"+userid+"') RETURN p.name AS name, exists((p)-[:FATHER_OF]->()) AS father_rel",
+                          database_="neo4j",)
+     driver.close()
+     return True
+     
+
+  
+
+
 
 with GraphDatabase.driver(URI, auth=AUTH) as driver:
     add_father(driver, "Richard", "Salim")
