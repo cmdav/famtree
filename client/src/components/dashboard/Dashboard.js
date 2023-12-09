@@ -1,9 +1,10 @@
 //Dashboard.js
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { loadProfile, plotFamilyTree } from '../../actions/profileAction';
+import Spinner from '../layout/Spinner';
 
 const Dashboard = ({
   setTitle,
@@ -11,18 +12,24 @@ const Dashboard = ({
   loadProfile,
   plotFamilyTree
 }) => {
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     setTitle('Dashboard'); // update the title when the component is mounted
     loadProfile();
-  }, [setTitle, loadProfile]);
-
-  // Add delay to load family tree image
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      plotFamilyTree();
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, [plotFamilyTree]);
+    plotFamilyTree()
+      .then(() => {
+        // Introduce a 3-second delay using setTimeout
+        setTimeout(() => {
+          // Once the image is loaded and the delay is over, set isLoading to false
+          setIsLoading(false);
+        }, 3000);
+      })
+      .catch((error) => {
+        console.error('Error plotting family tree:', error);
+        setIsLoading(false);
+      });
+  }, [setTitle, loadProfile, plotFamilyTree]);
 
   return (
     <section className="container">
@@ -35,12 +42,16 @@ const Dashboard = ({
         Display family tree graph. Fetch graph from http://localhost:8081/userid.jpg
         where userid is userProfile.userId
       */}
-      <div className="family-tree">
-        <img
-          src={`http://localhost:8081/${userProfile && userProfile.userId}.jpg?${Date.now()}`}
-          alt="Family Tree"
-        />
-      </div>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <div className="family-tree">
+          <img
+            src={`http://localhost:8081/${userProfile && userProfile.userId}.jpg?${Date.now()}`}
+            alt="Family Tree"
+          />
+        </div>
+      )}
     </section>
   );
 };
